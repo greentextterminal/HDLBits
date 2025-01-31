@@ -16,6 +16,6 @@ module top_module (
             8'b1zzzzzzz: pos = 7;
             default    : pos = 0;
         endcase
-	  end
+     end
 
 endmodule
