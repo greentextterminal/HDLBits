@@ -18,8 +18,8 @@ module top_module (
     // Visualization below:
     // ab = min(input a, b)
     //                     \
-    //						          min = min(ab, cd)
-    //					           /
+    //						min = min(ab, cd)
+    //					   /
     // cd = min(input c, d)
     
     // intermediate wire vectors
