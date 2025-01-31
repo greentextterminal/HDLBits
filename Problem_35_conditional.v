@@ -8,7 +8,7 @@ module top_module (
     // assign min = (a < b & a < c & a < d) ? a :
     //              (b < a & b < c & b < d) ? b :
     //              (c < a & c < b & c < d) ? c :
-    //     		      (d < a & d < b & d < c) ? d : 0;
+    //              (d < a & d < b & d < c) ? d : 0;
     
     // Solution 2)    
     // since we just want to get the min value, we can create a 2 input min comparison.
@@ -18,8 +18,8 @@ module top_module (
     // Visualization below:
     // ab = min(input a, b)
     //                     \
-    // min = min(ab, cd)
-    //	/
+    //                     min = min(ab, cd)
+    //	                   /
     // cd = min(input c, d)
     
     // intermediate wire vectors
