@@ -22,7 +22,7 @@ module top_module(
     // in[0]  -> out[99]  
     
     // Using a for loop to avoid 100 assign statements since for loops replicate circuitry 
-    integer i; // declare the incrementer
+    reg [6:0] i; // declare the incrementer (counting up to 100, therfore we need 7 bits (express up to 128))
     always @ (*) begin
         for (i=0 ; i < 100 ; i = i + 1) begin
             out[i] = in[99-i];
