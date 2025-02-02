@@ -11,8 +11,8 @@ module top_module(
     // Below is a visualization of the 100 bit ripple carry adder chain we are implementing
     //	       ___________         			    ___________					                        ___________	
     //         |2BFA_0   |         			    |2BFA_1   |					         .....          |2BFA_99  |	
-    // cin  -> |cin	 cout|--cout[0]------->	|cin  cout|--cout[1]-------> ..... -------> |cin  cout|--cout[99]-------> 
-    // a[0] -> |a	   sum |->sum[0]	a[1] -> |a    sum |->sum[1]          ..... a[98] -> |a    sum |->sum[99]
+    // cin  -> |cin  cout|--cout[0]------->	|cin  cout|--cout[1]-------> ..... -------> |cin  cout|--cout[99]-------> 
+    // a[0] -> |a    sum |->sum[0]	a[1] -> |a    sum |->sum[1]          ..... a[98] -> |a    sum |->sum[99]
     // b[0] -> |b        |		  	  b[1] ->	|b        |					         ..... b[98] -> |b        |		
     //         |_________|					        |_________|					         .....          |_________|	
     //
@@ -37,7 +37,7 @@ module top_module(
     //           |  |2BFA_0   |  |    |     	  |2BFA_1   |	 |	  |			     .... |     |   |2BFA_99  |	 |	   |
     //           -> |cin  cout|---    --------->|cin  cout|---    ---------> ....-      --> |cin  cout|--- 	   --------->
     //      a[0] -> |a	  sum |->sum[0]	a[1] -> |a    sum |->sum[1]          ..... a[98] -> |a    sum |->sum[99]
-    //      b[0] -> |b        |		  	  b[1] ->	|b        |					         ..... b[98] -> |b        |		
+    //      b[0] -> |b        |		      b[1] ->	|b        |					         ..... b[98] -> |b        |		
     //              |_________|					        |_________|					         .....          |_________|	
     //
     
