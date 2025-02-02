@@ -16,7 +16,7 @@ module top_module(
     // b[0] -> |b        |		  	b[1] ->	|b        |					 ..... b[98] -> |b        |		
     //         |_________|					|_________|					 .....          |_________|	
     //
-    // In order to create the above logic in a neatly packaged for loop we need to think about how we handle our cin and couts.
+    // In order to create the above configuration in a neatly packaged for loop we need to think about how we handle our cin and couts.
     // Our for loop can create as many copies of our 2 bit full adder as we'd like but how can we handle the initial cin into
     // our first FA, followed by the cout[i] feeding into the next FA's cin (cin[i+1]), ending with the final cout?
     // Every cout of every FA is 1 bit, so 100 FA's * 1 bit = 100 bits. We also need to take into account the initial cin which is 1 bit.
@@ -25,17 +25,20 @@ module top_module(
     // @ i = 0 the wire vector has our cin value and is the cin for our first FA
     // The first FAs cout is assigned to the idx 0 of the 100bit cout vector, which is the 1st idx (2nd position) of the carry vector
     // @ i = 1, the second FAs cout drives idx 1 of the 100bit cout vector, which is idx 2 (3rd position) of the carry vector
-    // etc...
+    // and so on...
     // 
-    // Implementing
+    // Implementing our design below
     //
-    // carry: 
-    //		   ___________         			___________					                ___________	
-    //         |2BFA_0   |         			|2BFA_1   |					 .....          |2BFA_99  |	
-    // cin  -> |cin	 cout|--cout[0]------->	|cin  cout|--cout[1]-------> ..... -------> |cin  cout|--cout[99]-------> 
-    // a[0] -> |a	 sum |->sum[0]	a[1] -> |a    sum |->sum[1]          ..... a[98] -> |a    sum |->sum[99]
-    // b[0] -> |b        |		  	b[1] ->	|b        |					 ..... b[98] -> |b        |		
-    //         |_________|					|_________|					 .....          |_________|	
+    // carry wire vector consists of: [cout[99], cout[98], ..., cout[0], cin]
+    //
+    // carry = [cin,             cout[0],				     cout[1],...........,cout[98],                cout[99] ]
+    //           |               ^    |                      ^    |				 ^     |				 ^     |
+    //		     |  ___________  |    |  		___________	 |	  |			     |     |    ___________	 |     |
+    //           |  |2BFA_0   |  |    |     	|2BFA_1   |	 |	  |			 ....|     |    |2BFA_99  |	 |	   |
+    //           -> |cin  cout|---    --------->|cin  cout|---    ---------> ....-     ---> |cin  cout|--- 	   --------->
+    //      a[0] -> |a	  sum |->sum[0]	a[1] -> |a    sum |->sum[1]          ..... a[98] -> |a    sum |->sum[99]
+    //      b[0] -> |b        |		  	b[1] ->	|b        |					 ..... b[98] -> |b        |		
+    //              |_________|					|_________|					 .....          |_________|	
     //
     
     // creating a 100 + 1 bit wide in order to accodomate the final carry out bit from the 100th full adder 
