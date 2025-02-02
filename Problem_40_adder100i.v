@@ -9,7 +9,7 @@ module top_module(
     // since our full adder deals with 2 bits at a time (200 bits / (2 bits / 1 FA))) we need 100 full adder instantiations
     // 2BFA : 2 Bit Full Adder
     // Below is a visualization of the 100 bit ripple carry adder chain we are implementing
-    //         ___________                  ___________	                                ___________	
+    //         ___________                  ___________	                                ___________
     //         |2BFA_0   |                  |2BFA_1   |                  .....          |2BFA_99  |	
     // cin  -> |cin  cout|--cout[0]------->	|cin  cout|--cout[1]-------> ..... -------> |cin  cout|--cout[99]-------> 
     // a[0] -> |a    sum |->sum[0]	a[1] -> |a    sum |->sum[1]          ..... a[98] -> |a    sum |->sum[99]
