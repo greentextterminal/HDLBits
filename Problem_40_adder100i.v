@@ -48,7 +48,7 @@ module top_module(
     genvar i;
     generate
         for (i = 0; i < 100; i = i + 1) begin : rip_carr_addr100 // the gen blocks name
-        	full_adder2 fa2(.a(a[i]),
+            full_adder2 fa2(.a(a[i]),
                             .b(b[i]),
                             .cin(carry[i]),
                             .sum(sum[i]),
@@ -60,7 +60,7 @@ endmodule
 
 
 // this is a 2 bit full adder
-//		    ___________
+//        ___________
 //        |2BFA     | 
 // cin -> |cin	cout|->
 // a   -> |a	  sum |->
