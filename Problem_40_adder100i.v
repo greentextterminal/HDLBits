@@ -13,8 +13,8 @@ module top_module(
     //         |2BFA_0   |                  |2BFA_1   |                  .....          |2BFA_99  |	
     // cin  -> |cin  cout|--cout[0]------->	|cin  cout|--cout[1]-------> ..... -------> |cin  cout|--cout[99]-------> 
     // a[0] -> |a    sum |->sum[0]	a[1] -> |a    sum |->sum[1]          ..... a[98] -> |a    sum |->sum[99]
-    // b[0] -> |b        |          b[1] ->	|b        |	                 ..... b[98] -> |b        |		
-    //         |_________|                  |_________|                  .....          |_________|	
+    // b[0] -> |b        |          b[1] ->	|b        |                  ..... b[98] -> |b        |
+    //         |_________|                  |_________|                  .....          |_________|
     //
     // In order to create the above configuration in a neatly packaged for loop we need to think about how we handle our cin and couts.
     // Our for loop can create as many copies of our 2 bit full adder as we'd like but how can we handle the initial cin into
