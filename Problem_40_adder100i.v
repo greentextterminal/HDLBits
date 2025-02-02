@@ -31,14 +31,14 @@ module top_module(
     //
     // carry wire vector consists of: [cout[99], cout[98], ..., cout[0], cin]
     //
-    // carry = [cin,             cout[0],                      cout[1],..........., cout[98],              cout[99] ]
-    //           |               ^    |                      ^    |				        ^     |				         ^     |
-    //           |  ___________  |    |  		    ___________	 |	  |			          |     |   ___________	 |     |
-    //           |  |2BFA_0   |  |    |     	  |2BFA_1   |	 |	  |			     .... |     |   |2BFA_99  |	 |	   |
+    // carry = [cin,             cout[0],                    cout[1],..........., cout[98],              cout[99] ]
+    //           |               ^    |                      ^    |               ^     |                ^     |
+    //           |  ___________  |    |         ___________	 |    |			      |     |   ___________  |     |
+    //           |  |2BFA_0   |  |    |         |2BFA_1   |	 |    |          .... |     |   |2BFA_99  |  |     |
     //           -> |cin  cout|---    --------->|cin  cout|---    ---------> ....-      --> |cin  cout|--- 	   --------->
-    //      a[0] -> |a	  sum |->sum[0]	a[1] -> |a    sum |->sum[1]          ..... a[98] -> |a    sum |->sum[99]
-    //      b[0] -> |b        |         b[1] ->	|b        |					         ..... b[98] -> |b        |		
-    //              |_________|                 |_________|					         .....          |_________|	
+    //      a[0] -> |a    sum |->sum[0]	a[1] -> |a    sum |->sum[1]          ..... a[98] -> |a    sum |->sum[99]
+    //      b[0] -> |b        |         b[1] ->	|b        |                  ..... b[98] -> |b        |
+    //              |_________|                 |_________|                  .....          |_________|
 
     
     // creating a 100 + 1 bit wide in order to accodomate the final carry out bit from the 100th full adder 
