@@ -9,9 +9,9 @@ module top_module(
     // since our full adder deals with 2 bits at a time (200 bits / (2 bits / 1 FA))) we need 100 full adder instantiations
     // 2BFA : 2 Bit Full Adder
     // Below is a visualization of the 100 bit ripple carry adder chain we are implementing
-    //         ___________                  ___________	                                ___________
-    //         |2BFA_0   |                  |2BFA_1   |                  .....          |2BFA_99  |	
-    // cin  -> |cin  cout|--cout[0]------->	|cin  cout|--cout[1]-------> ..... -------> |cin  cout|--cout[99]-------> 
+    //         ___________                  ___________                                 ___________
+    //         |2BFA_0   |                  |2BFA_1   |                  .....          |2BFA_99  |
+    // cin  -> |cin  cout|--cout[0]------->	|cin  cout|--cout[1]-------> ..... -------> |cin  cout|--cout[99]------->
     // a[0] -> |a    sum |->sum[0]	a[1] -> |a    sum |->sum[1]          ..... a[98] -> |a    sum |->sum[99]
     // b[0] -> |b        |          b[1] ->	|b        |                  ..... b[98] -> |b        |
     //         |_________|                  |_________|                  .....          |_________|
@@ -31,15 +31,15 @@ module top_module(
     //
     // carry wire vector consists of: [cout[99], cout[98], ..., cout[0], cin]
     //
-  // carry = [cin,             cout[0],                      cout[1],..........., cout[98],              cout[99] ]
+    // carry = [cin,             cout[0],                      cout[1],..........., cout[98],              cout[99] ]
     //           |               ^    |                      ^    |				        ^     |				         ^     |
-    //	         |  ___________  |    |  		    ___________	 |	  |			          |     |   ___________	 |     |
+    //           |  ___________  |    |  		    ___________	 |	  |			          |     |   ___________	 |     |
     //           |  |2BFA_0   |  |    |     	  |2BFA_1   |	 |	  |			     .... |     |   |2BFA_99  |	 |	   |
     //           -> |cin  cout|---    --------->|cin  cout|---    ---------> ....-      --> |cin  cout|--- 	   --------->
     //      a[0] -> |a	  sum |->sum[0]	a[1] -> |a    sum |->sum[1]          ..... a[98] -> |a    sum |->sum[99]
-    //      b[0] -> |b        |		      b[1] ->	|b        |					         ..... b[98] -> |b        |		
-    //              |_________|					        |_________|					         .....          |_________|	
-    //
+    //      b[0] -> |b        |         b[1] ->	|b        |					         ..... b[98] -> |b        |		
+    //              |_________|                 |_________|					         .....          |_________|	
+
     
     // creating a 100 + 1 bit wide in order to accodomate the final carry out bit from the 100th full adder 
     wire [100:0] carry; 
