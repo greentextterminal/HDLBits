@@ -61,11 +61,11 @@ endmodule
 
 // this is a 2 bit full adder
 //        ___________
-//        |2BFA     | 
-// cin -> |cin	cout|->
-// a   -> |a	  sum |->
-// b   -> |b        |	
-//        |_________|	
+//        |2BFA     |
+// cin -> |cin  cout|->
+// a   -> |a    sum |->
+// b   -> |b        |
+//        |_________|
 module full_adder2(
     input a,
     input b,
