@@ -26,11 +26,17 @@ Upper bound overflow:
 a = 7
 b = 8
 a + b = 7 + 1
-0111 + 0001 = 1000 = 8 (overflow occurred)
+0111 + 0001 = 1000 = 8 
+Overflow occurred!
+Result should be positive
+MSB is reserved for indicating negative numbers
 
 Lower bound overflow
 a = -8
 b = -1
-a 
-
+a + b = (-8) + (-1) = (-9)
+Ooverflow occurred!
+Result should be negative
+MSB is reserved for indicating negative numbers, exceeded bit size and carried over into 5th bit
+1000 + 1111 = (1)0111 (
 */
