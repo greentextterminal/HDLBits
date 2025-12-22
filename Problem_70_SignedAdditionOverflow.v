@@ -38,5 +38,29 @@ a + b = (-8) + (-1) = (-9)
 Ooverflow occurred!
 Result should be negative
 MSB is reserved for indicating negative numbers, exceeded bit size and carried over into 5th bit
-1000 + 1111 = (1)0111 (
+1000 + 1111 = (1)0111
 */
+
+module top_module (
+    input  [7:0] a,
+    input  [7:0] b,
+    output [7:0] s,
+    output overflow
+);
+
+// capture result of a + b in s
+assign s = a + b; 
+  
+always @ (*) begin
+  if (!a[7] & !b[7] & s[7]) begin
+    overflow = 1;
+  end
+  else if (a[7] & b[7] & !s[7]) begin
+    overflow = 1;
+  end
+  else begin
+    overflow = 0;
+  end
+end
+
+endmodule
