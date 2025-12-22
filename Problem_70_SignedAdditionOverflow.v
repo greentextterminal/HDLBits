@@ -22,6 +22,9 @@ Lower bound is giveb by -2^(n-1),  @n=4 upper bound is -2^(4-1)=-8
   4) Final value is expressed as 1000
     1000 -> this value can be rexpressed as (-8)+0+0+0=-8
 
+Testing conditions around upper and lower bounds:
+-------------------------------------------------
+
 Upper bound overflow:
 a = 7
 b = 8
