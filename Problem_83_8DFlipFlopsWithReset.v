@@ -9,18 +9,13 @@ module top_module (
     output [7:0] q
 );
 
-  genvar i;
-  generate 
-    for (i=0; i<8; i=i+1) begin : DFF8
-      always @ (posedge clk) begin
-        if (reset) begin // synchronous reset: posedge clk && posedge reset
-          q[i] <= 0;
-        end
-        else begin
-          q[i] <= d[i];
-        end
-      end
+always @ (posedge clk) begin
+    if (reset) begin // synchronous reset: posedge clk && posedge reset
+        q <= 0;
     end
-  endgenerate
+    else begin
+        q <= d;
+    end
+end 
 
 endmodule
