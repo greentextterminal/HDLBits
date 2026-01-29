@@ -7,14 +7,9 @@ module top_module (
     input [7:0] d,
     output [7:0] q
 );
-
-  genvar i;
-  generate 
-    for (i=0; i<8; i=i+1) begin : DFF8
-      always @ (posedge clk) begin
-        q[i] <= d[i];
-      end
+    // 8 DFFs
+    always @ (posedge clk) begin
+        q <= d;
     end
-  endgenerate
 
 endmodule
