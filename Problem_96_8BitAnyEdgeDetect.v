@@ -21,7 +21,7 @@ The output bit should be set the cycle after a 0 to 1 transition occurs.
                          ______________
     delayed_signal                    |_____
                                  ______
-    positive edge pulse _________|    |________
+    negative edge pulse _________|    |________
 */
 
 module top_module (
