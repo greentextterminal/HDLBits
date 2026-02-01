@@ -19,8 +19,7 @@ To latch the signals we need to implement a pulse to level converter in the form
 |(A FF is used but edge detection  |    |                                |   | if coming out of reset, use the stored
 |is completed in the same cycle)   | -> |store result for use after reset|   | and new values, clear the store
 
-    |------MUX------|        |---------FF---------|
-                    |delayed_out (output)
+
 */
 
 module top_module (
