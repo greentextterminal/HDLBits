@@ -37,11 +37,11 @@ module top_module (
     if (reset) begin
       delayed_output <= {32{1'b0}};
     end
-    else if (negedge_detect) begin 
+      else if (negedge_detect) begin // this else if block updates the outputs current levels with the newly detected 1 to 0 transitions
       // assign the pulse to a reg (this pulse will get sampled and get kept in the DFF memory for 1 CC (CC N))
       delayed_output <= delayed_output | negedge_detect; // using a bitwise OR to update the output with new levels and maintain previous output results
     end
-    else begin
+    else begin // the else block maintains the level (pulse to level conversion)
       // because negedge_detect is a pulse this logic will make the DFF sample its own output (D=Q) during CC N+1, 2, 3, ... and create a level until reset
       delayed_output <= delayed_output;
     end
