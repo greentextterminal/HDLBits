@@ -14,12 +14,6 @@ In the last 4 cycles of the example waveform below, the 'reset' event occurs one
 We need to latch the output from the negative edge detector, delay by 1 CC, and deassert the latched outputs if reset is asserted
 To latch the signals we need to implement a pulse to level converter in the form of an SR FF (this is done by sampling the flops own output)
 
-|------------Stage 1---------------|    |--------Stage 2 (FF Delay)------|   |----------Stage 3 (output)-------------|
-|negative edge detection           | -> |delayed output (FF stage 2)     |-> | output the levels
-|(A FF is used but edge detection  |    |                                |   | if coming out of reset, use the stored
-|is completed in the same cycle)   | -> |store result for use after reset|   | and new values, clear the store
-
-
 */
 
 module top_module (
@@ -37,24 +31,19 @@ module top_module (
   reg [31:0] delayed_output;
   assign out = delayed_output;
 
-  // store result for use after reset
-  reg [31:0] stored_output;
-
   always @ (posedge clk) begin
     in_dly <= in; // delayed signal for negative edge detection
     
     if (reset) begin
       delayed_output <= {32{1'b0}};
-      stored_output <= negedge_detect;
     end
     else if (negedge_detect) begin 
       // assign the pulse to a reg (this pulse will get sampled and get kept in the DFF memory for 1 CC (CC N))
-      delayed_output <= negedge_detect | stored_output; // or with store_output to recapture previous results
+      delayed_output <= delayed_output | negedge_detect; // using a bitwise OR to update the output with new levels and maintain previous output results
     end
     else begin
       // because negedge_detect is a pulse this logic will make the DFF sample its own output (D=Q) during CC N+1, 2, 3, ... and create a level until reset
-      delayed_output <= delayed_output | stored_output;
-      stored_output <= {32{1'b0}};
+      delayed_output <= delayed_output;
     end
   end
 
