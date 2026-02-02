@@ -83,6 +83,7 @@ We can simplify the negative edge detector as follows:
 - We can observe that during a clk high the clk_dly will be a 1
  (During a posedge of clk, clk gets sampled, and since the sample is held for the duration of the clock cycle then the clk_dly register will always output a 1)
 - We can replace the register for delaying the signal (clk) and collapse the negative edge detector to: assign clk_negedge = ~clk & 1'b1 = ~clk and ultimately just use (~clk) as our negative clk edge detector
+- Also, clocks should never be derived. They should be actual clock edges so that the tools can properly route and perform timing analysis
 
 The optimized design is below:
 */
@@ -102,7 +103,7 @@ module top_module (
     end
 
     // sample d at negative of the clk
-    always @ (posedge ~clk) begin
+    always @ (negedge clk) begin
         negedge_dff <= d;
     end
 
