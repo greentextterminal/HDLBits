@@ -6,15 +6,46 @@ However, FPGAs don't have dual-edge triggered flip-flops, and always @(posedge c
 Build a circuit that functionally behaves like a dual-edge triggered flip-flop:
 */
 
+/*
+The design implemented is as follows:
+
+Negative edge detector circuit:
+                   __________        ______
+       ------clk-->|NOT GATE|--~clk->|    |
+       |           |________|        |AND |----> clk_negedge
+       |     _______                 |GATE|
+       ----->|     |----clk_dly----->|____|
+clk ---|     | DFF |
+       ----->|>    |
+             |_____| 
+
+
+Dual edge flip flop circuit:
+                            ___________
+                       D--->|         |
+        ________________    | posedge |                       
+        | clk negative |    | clk DFF |---posedge_dff---      __________
+clk---->| edge detector|--->|>        |                |      |        |
+     |  |______________|    |_________|                |----->|1       |
+     |                      ___________                       |   MUX  |----> q
+     |                 D--->|         |                |----->|0       |
+     |                      | negedge |                |      |___sel__|
+     |                      | clk DFF |---negedge_dff---           |
+     ---------clk---------->|>        |                            |
+     |                      |_________|                            |
+     |                                                             |
+     |--------clk--------------------------------------------------|
+*/
+
 module top_module (
     input clk,
     input d,
     output q
 );
-  /*
-  The posedge clk automatically makes the flop flop positive edge clock triggered because of the (posedge clk) sensitivity list
-  Need to implement a negative edge detector to get the flop to "react" to the negative edge of the clk
-  */
+/*
+The posedge clk automatically makes the flop flop positive edge clock triggered because of the (posedge clk) sensitivity list
+Need to implement a negative edge detector to get the flop to "react" to the negative edge of the clk
+*/
     
     // negedge detector
     reg clk_dly;
