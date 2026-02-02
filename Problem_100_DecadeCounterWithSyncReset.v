@@ -17,7 +17,7 @@ module top_module (
   assign q = count;
 
   always @ (posedge clk) begin
-    if (reset | (count==4'd9)) begin // reset counter to 0 once we hit 9
+      if (reset || (count==4'd9)) begin // reset counter to 0 once we hit 9
       count <= 4'h0;
     end
     else begin
