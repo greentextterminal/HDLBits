@@ -102,7 +102,7 @@ module top_module (
     end
 
     // sample d at negative of the clk
-  always @ (posedge ~clk) begin
+    always @ (posedge ~clk) begin
         negedge_dff <= d;
     end
 
