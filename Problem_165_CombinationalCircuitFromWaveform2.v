@@ -99,13 +99,13 @@ module top_module (
   localparam zero=0, two=2, four=4;
   
   always @ (*) begin
-    if (~|wire_bundle) begin // all 0s case
+    if (~|wire_bundle) begin     // all inputs 0 case (0 case)
       q = 1;
     end
-    else if ( ((a^b) & (c^d)) | ((a & b) ^ (c & d)) ) begin // 2 input case
+    else if (&wire_bundle) begin // all inputs 1 case (4 case)
       q = 1;
     end
-    else if (&wire_bundle) begin // 4 input case
+    else if ( ((a^b) & (c^d)) | ((a&b) & (~(a^b))) | ((c&d) & (~(a&b))) ) begin // 2 input case
       q = 1;
     end
     else begin // if none of the above case, output is 0
