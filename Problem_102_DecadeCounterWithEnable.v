@@ -19,8 +19,16 @@ module top_module (
   assign q = count;
   
   always @ (posedge clk) begin
-    if (reset || (count==9)) begin
+    if (reset) begin
       count <= 0;
+    end
+    else if (count == 9) begin
+        if (!slowena) begin
+          count <= count;
+        end
+        else begin
+          count <= 0;
+        end
     end
     else if (slowena) begin
       count <= count + 1; // increment if slowena
