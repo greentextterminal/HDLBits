@@ -28,19 +28,17 @@ module top_module(
     wire both_directions = bump_left & bump_right; // if bump left and right triggered at the same time
 
     always @ (*) begin
+      // default
+      next_state = state; // set next_state with current state (in lieu of an else statement in the cases
       // State transition logic
       case (state)
         LEFT: begin
           if (bump_left || both_directions) 
             next_state = RIGHT;
-          else 
-            next_state = LEFT;
         end
         RIGHT: begin
           if (bump_right || both_directions) 
             next_state = LEFT;
-          else 
-            next_state = RIGHT;
         end
         default: begin
           next_state = LEFT;
