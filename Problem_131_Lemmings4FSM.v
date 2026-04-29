@@ -42,7 +42,6 @@ module top_module(
   end
 
   // fall counter (down count to 0)
-  wire splat;
   localparam N = 20 + 1; 
   reg [$clog2(N)-1:0] count = 0;
   always @ (posedge clk or posedge areset) begin
@@ -52,7 +51,7 @@ module top_module(
     else if (ground) begin
       count <= 0;
     end
-    else if ((state == FALL_L) || (state == FALL_R)) begin // state acts as the enable signal (down counter starts when in any fall state)
+    else if ((state == FALL_L) || (state == FALL_R)) begin // fall states act as the enable signal (up counter starts when in any fall state)
       count <= count + 1;  
     end
     else begin
@@ -60,6 +59,10 @@ module top_module(
     end
   end
 
+  // fall time exceeded logic
+  wire fall_time_exceeded;
+  assign fall_time_exceeded = (count > N) ? 1'b1 : 1'b0;
+  
   // next state transition logic
   always @ (*) begin
     next_state = state; // hold the current state (prevent latches)
@@ -76,11 +79,11 @@ module top_module(
       end
       FALL_L: begin
         if (ground) next_state = LEFT;
-        else if (count == N) next_state = SPLAT;
+        else if (fall_time_exceeded && ground) next_state = SPLAT;
       end
       FALL_R: begin
         if (ground) next_state = RIGHT;
-        else if (count == N) next_state = SPLAT;
+        else if (fall_time_exceeded && ground) next_state = SPLAT;
       end
       DIG_L: begin
         if (!ground) next_state = FALL_L;
@@ -89,6 +92,7 @@ module top_module(
         if (!ground) next_state = FALL_R;
       end
       SPLAT: begin
+        // if SPLAT then no more walking, screaming, or digging
         next_state = state;
       end
       // handles illegal cases
@@ -96,9 +100,9 @@ module top_module(
     endcase
   end
 
-   // output assignment
+  // output assignment
   assign walk_left  = (state == SPLAT) ? 1'b0 : (state == LEFT);
   assign walk_right = (state == SPLAT) ? 1'b0 : (state == RIGHT);
   assign aaah       = (state == SPLAT) ? 1'b0 : ((state == FALL_L) || (state == FALL_R));
-  assign digging    = (state == SPLAT) ? 1'b0 : ((state == DIG_L) || (state == DIG_R));
+  assign digging    = (state == SPLAT) ? 1'b0 : ((state == DIG_L)  || (state == DIG_R));
 endmodule
