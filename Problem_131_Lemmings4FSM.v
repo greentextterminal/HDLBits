@@ -31,19 +31,17 @@ module top_module(
                    DIG_L  = 3'd4,
                    DIG_R  = 3'd5,
                    SPLAT  = 3'd6;
-
+  // params
+  localparam N = 20 + 1; 
+  
+  // wires
+  wire fall_time_exceeded;
+  
   // registers
   reg [2:0] state, next_state;
-
-  // next state always block
-  always @ (posedge clk or posedge areset) begin
-    if (areset) state <= LEFT;
-    else state <= next_state;
-  end
-
-  // fall counter (down count to 0)
-  localparam N = 20 + 1; 
   reg [$clog2(N)-1:0] count = 0;
+
+  // fall counter (counts for 21 cycles since 20 cycles is the max survivable fall time)
   always @ (posedge clk or posedge areset) begin
     if (areset) begin
       count <= 0;
@@ -51,7 +49,12 @@ module top_module(
     else if (ground) begin
       count <= 0;
     end
-    else if ((state == FALL_L) || (state == FALL_R)) begin // fall states act as the enable signal (up counter starts when in any fall state)
+    else if (count == N + 1) begin
+      // to prevent count wraparound if falling for a long time, hold the count
+      count <= count;
+    end
+    else if ((state == FALL_L) || (state == FALL_R)) begin 
+      // fall states act as the enable signal (up counter starts when in any fall state)
       count <= count + 1;  
     end
     else begin
@@ -60,8 +63,13 @@ module top_module(
   end
 
   // fall time exceeded logic
-  wire fall_time_exceeded;
   assign fall_time_exceeded = (count > N) ? 1'b1 : 1'b0;
+
+  // next state always block
+  always @ (posedge clk or posedge areset) begin
+    if (areset) state <= LEFT;
+    else state <= next_state;
+  end
   
   // next state transition logic
   always @ (*) begin
@@ -78,12 +86,12 @@ module top_module(
         else if (bump_right) next_state = LEFT;
       end
       FALL_L: begin
-        if (ground) next_state = LEFT;
-        else if (fall_time_exceeded && ground) next_state = SPLAT;
+        if (fall_time_exceeded && ground) next_state = SPLAT;
+        else if (ground) next_state = LEFT;
       end
       FALL_R: begin
-        if (ground) next_state = RIGHT;
-        else if (fall_time_exceeded && ground) next_state = SPLAT;
+        if (fall_time_exceeded && ground) next_state = SPLAT;
+        else if (ground) next_state = RIGHT;
       end
       DIG_L: begin
         if (!ground) next_state = FALL_L;
