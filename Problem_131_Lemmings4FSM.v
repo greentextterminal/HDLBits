@@ -32,14 +32,21 @@ module top_module(
                    DIG_R  = 3'd5,
                    SPLAT  = 3'd6;
   // params
-  localparam N = 20 + 1; 
+  localparam deadly_cycles = 20; 
+  /*
+  edge 1 -> count = 0
+  edge 2 -> count = 1
+  ...
+  edge 20 -> count = 19 (@ edge 20 we are still safe)
+  edge 21 -> count = 20 (@ edge 21+ we are no longer safe)
+  */
   
   // wires
   wire fall_time_exceeded;
   
   // registers
   reg [2:0] state, next_state;
-  reg [$clog2(N)-1:0] count = 0;
+  reg [$clog2(deadly_cycles)-1:0] count = 0;
 
   // fall counter (counts for 21 cycles since 20 cycles is the max survivable fall time)
   always @ (posedge clk or posedge areset) begin
@@ -49,9 +56,9 @@ module top_module(
     else if (ground) begin
       count <= 0;
     end
-    else if (count == N + 1) begin
+      else if (count == deadly_cycles) begin
       // to prevent count wraparound if falling for a long time, hold the count
-      count <= count;
+      count <= count; // hold when count == 20
     end
     else if ((state == FALL_L) || (state == FALL_R)) begin 
       // fall states act as the enable signal (up counter starts when in any fall state)
@@ -63,7 +70,7 @@ module top_module(
   end
 
   // fall time exceeded logic
-  assign fall_time_exceeded = (count > N) ? 1'b1 : 1'b0;
+  assign fall_time_exceeded = (count == deadly_cycles) ? 1'b1 : 1'b0;
 
   // next state always block
   always @ (posedge clk or posedge areset) begin
