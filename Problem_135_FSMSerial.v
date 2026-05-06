@@ -28,7 +28,7 @@ module top_module(
   wire count_hit;
 
   // registers for state
-  reg [1:0] state, next_state;
+  reg [2:0] state, next_state;
 
   // counter cycles limit hit
   assign count_hit = (count == (DATA_LENGTH - 1));
@@ -66,11 +66,9 @@ module top_module(
   end
 
   /*
-      [IDLE] -> [START] -> [DATA] -> [STOP] -> [DONE]
-                   |          ^________|__________|
-                   |___________________|
-                   
-      If DONE state is reached it will act like the START state and check for the S
+      [IDLE] -(~in)-> [START] -(1 CC)-> [DATA] -(in & 8CC) -> [STOP] -(in)-> [DONE]
+                                          ^____________________________________|
+      If DONE state is reached it will act like the START state and check for the START bit of 0 (~in)
   */
 
   // next state transition logic
@@ -89,7 +87,7 @@ module top_module(
       end
       DATA: begin
         // wait for 8 CCs of data
-        if (count_hit)
+        if (in & count_hit)
           next_state = STOP;
       end
       STOP: begin
