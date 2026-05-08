@@ -67,6 +67,7 @@ module top_module(
   end
 
   /*
+                         /<-------------------------(~in)----------------|
       [IDLE] -(~in)-> [START] -(1 CC)-> [DATA] -(8CC)-> [STOP] -(in)-> [DONE]
          ^                                                 |
          |                                               (~in)
@@ -108,7 +109,7 @@ module top_module(
       DONE: begin
         // If 0 detected behave like START state from this state
         if (~in)
-          next_state = DATA;
+          next_state = START;
       end
       default: begin // illegal state handling
         next_state = IDLE;
