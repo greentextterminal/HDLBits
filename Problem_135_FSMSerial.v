@@ -21,7 +21,8 @@ module top_module(
                    START = 3'd1,
                    DATA  = 3'd2,
                    STOP  = 3'd3,
-                   DONE  = 3'd4;
+                   WAIT  = 3'd4,
+                   DONE  = 3'd5;
 
   // reg and wire for counter
   reg [$clog2(DATA_LENGTH+1)-1:0] count;
@@ -58,7 +59,7 @@ module top_module(
   // state always block
   always @ (posedge clk) begin
     if (reset) begin
-      state <= 0;
+      state <= IDLE;
     end
     else begin
       state <= next_state;
@@ -66,8 +67,12 @@ module top_module(
   end
 
   /*
-      [IDLE] -(~in)-> [START] -(1 CC)-> [DATA] -(in & 8CC) -> [STOP] -(in)-> [DONE]
-                                          ^____________________________________|
+      [IDLE] -(~in)-> [START] -(1 CC)-> [DATA] -(8CC)-> [STOP] -(in)-> [DONE]
+         ^                                                 |
+         |                                               (~in)
+         |                                                 |
+         |                                               [WAIT]
+         |________________________(in)_____________________|
       If DONE state is reached it will act like the START state and check for the START bit of 0 (~in)
   */
 
@@ -87,17 +92,26 @@ module top_module(
       end
       DATA: begin
         // wait for 8 CCs of data
-        if (in & count_hit)
+        if (count_hit)
           next_state = STOP;
       end
       STOP: begin
         if (in)
           next_state = DONE;
+        else
+          next_state = WAIT;
+      end
+      WAIT: begin
+        if (in)
+          next_state = IDLE;
       end
       DONE: begin
         // If 0 detected behave like START state from this state
         if (~in)
           next_state = DATA;
+      end
+      default: begin // illegal state handling
+        next_state = IDLE;
       end
     endcase
   end
