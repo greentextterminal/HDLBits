@@ -17,12 +17,12 @@ module top_module(
   localparam DATA_LENGTH = 8;
 
   // state encoding
-  localparam [2:0] IDLE  = 3'd0,
-                   START = 3'd1,
-                   DATA  = 3'd2,
-                   STOP  = 3'd3,
-                   WAIT  = 3'd4,
-                   DONE  = 3'd5;
+  localparam [2:0] IDLE  = 0,
+                   START = 1,
+                   DATA  = 2,
+                   STOP  = 3,
+                   WAIT  = 4,
+                   DONE  = 5;
 
   // reg and wire for counter
   reg [$clog2(DATA_LENGTH+1)-1:0] count;
@@ -67,13 +67,12 @@ module top_module(
   end
 
   /*
-                         /<-------------------------(~in)----------------|
       [IDLE] -(~in)-> [START] -(1 CC)-> [DATA] -(8CC)-> [STOP] -(in)-> [DONE]
-         ^                                                 |
-         |                                               (~in)
-         |                                                 |
-         |                                               [WAIT]
-         |________________________(in)_____________________|
+                                                           |             |  |__(~in)__>[START]
+                                                         (~in)           |______(in)__>[IDLE]
+                                                           |
+                                                         [WAIT]--(in)-->[IDLE]
+
       If DONE state is reached it will act like the START state and check for the START bit of 0 (~in)
   */
 
@@ -107,9 +106,10 @@ module top_module(
           next_state = IDLE;
       end
       DONE: begin
-        // If 0 detected behave like START state from this state
         if (~in)
           next_state = START;
+        else 
+          next_state = IDLE;
       end
       default: begin // illegal state handling
         next_state = IDLE;
@@ -117,7 +117,7 @@ module top_module(
     endcase
   end
 
-  // driving output
+    // driving output (needs to be a pulse)
   assign done = (state == DONE);
   
 endmodule
