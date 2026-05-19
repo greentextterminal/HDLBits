@@ -21,8 +21,7 @@ module top_module(
                    START = 1,
                    DATA  = 2,
                    STOP  = 3,
-                   WAIT  = 4,
-                   DONE  = 5;
+                   WAIT  = 4;
 
   // reg and wire for counter
   reg [$clog2(DATA_LENGTH+1)-1:0] count;
@@ -67,13 +66,12 @@ module top_module(
   end
 
   /*
-      [IDLE] -(~in)-> [START] -(1 CC)-> [DATA] -(8CC)-> [STOP] -(in)-> [DONE]
-                                                           |             |  |__(~in)__>[START]
-                                                         (~in)           |______(in)__>[IDLE]
-                                                           |
-                                                         [WAIT]--(in)-->[IDLE]
+      [IDLE] -(~in)-> [START] -(1 CC)-> [DATA] -(8CC) & (in)-> [STOP]
+                                           |                    |  |__(~in)__>[START]
+                                         (~in)                  |______(in)__>[IDLE]
+                                           |
+                                         [WAIT]--(in)-->[IDLE]
 
-      If DONE state is reached it will act like the START state and check for the START bit of 0 (~in)
   */
 
   // next state transition logic
@@ -92,23 +90,21 @@ module top_module(
       end
       DATA: begin
         // wait for 8 CCs of data
-        if (count_hit)
-          next_state = STOP;
+        if (count_hit) begin
+          if (in)
+            next_state = STOP;
+          else
+            next_state = WAIT;
+        end
       end
       STOP: begin
         if (in)
-          next_state = DONE;
+          next_state = IDLE;
         else
-          next_state = WAIT;
+          next_state = START;
       end
       WAIT: begin
         if (in)
-          next_state = IDLE;
-      end
-      DONE: begin
-        if (~in)
-          next_state = START;
-        else 
           next_state = IDLE;
       end
       default: begin // illegal state handling
@@ -118,6 +114,6 @@ module top_module(
   end
 
     // driving output (needs to be a pulse)
-  assign done = (state == DONE);
+  assign done = (state == STOP);
   
 endmodule
