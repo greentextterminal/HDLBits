@@ -122,10 +122,12 @@ module top_module(
   always @ (posedge clk) begin
     if (reset)
       output_byte <= 0;
-    else if (state == DATA)
+    // shift in data during the exact clock cycle we enter DATA state
+    // check for !count_hit to stop shifting in data at the last bit of the payload (safety measure)
+    else if ((next_state == DATA) && (!count_hit))
       output_byte <= {in, output_byte[7:1]};
     else
-      output_byte <= 0;
+      output_byte <= output_byte; // hold the data
   end
 
   // send out the shifted in byte
